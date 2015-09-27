@@ -3,40 +3,51 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var port = process.env.PORT || 8008;
+var port = process.env.PORT || 8011;
 
 app.use('/', express.static(__dirname + '/../client'));
 
 var rooms = {};
 
-io.on('connection', function(socket){
+var generateRoomCode = function () {
+  return [0,0,0,0].map(getRandomLetter).join('');
+}
+
+var getRandomLetter = function () {
+  return String.fromCharCode('A'.charCodeAt(0) + getRandomBetween(0, 26));
+}
+
+var getRandomBetween = function (min, max) {
+  // (integer min, integer max) -> integer
+  return Math.floor(Math.random()*(max - min)) + min;
+}
+
+io.on('connection', function (socket) {
   console.log('a user connected');
-  socket.on('joinRoom', function(roomname, username) {
-    if(roomname in rooms) {
-      rooms[roomname].users.push(username);
+  socket.on('joinRoom', function(roomcode, username) {
+    roomcode = roomcode.toUpperCase();
+    if(roomcode in rooms) {
+      rooms[roomcode].users.push(username);
       socket.username = username;
-      socket.room = roomname;
-      socket.join(roomname);
-      socket.emit('joinRoom', 'You joined ' + roomname);
-      socket.broadcast.to(roomname).emit('newUser', username + ' just joined ' + roomname);
+      socket.room = roomcode;
+      socket.join(roomcode);
+      socket.emit('joinRoom', 'You joined ' + roomcode);
+      socket.broadcast.to(roomcode).emit('newUser', username + ' just joined ' + roomcode);
     } else {
-      socket.emit('message', roomname + ' does not exist');
+      socket.emit('message', roomcode + ' does not exist');
     }
   });
-  socket.on('addRoom', function(roomname, username) {
-    if(roomname in rooms) {
-      socket.emit('message', roomname + ' already exists');
-    } else {
-      rooms[roomname] = {
-        users: [username]
-      };
-      socket.username = username;
-      socket.room = roomname;
-      socket.join(roomname);
-      console.log(roomname + ' created');
-      socket.emit('joinRoom', 'You joined ' + roomname);
-      socket.broadcast.to(roomname).emit('newUser', username + ' just joined ' + roomname);
-    }
+  socket.on('createRoom', function() {
+    do {
+      var roomcode = generateRoomCode();
+    } while (roomcode in rooms);
+    rooms[roomcode] = {
+      users: []
+    };
+    socket.room = roomcode;
+    socket.join(roomcode);
+    console.log(roomcode + ' created');
+    socket.emit('hostGame', roomcode);
   });
 });
 
