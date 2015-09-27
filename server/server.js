@@ -3,7 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
-var port = process.env.PORT || 8007;
+var port = process.env.PORT || 8008;
 
 app.use('/', express.static(__dirname + '/../client'));
 
@@ -16,6 +16,7 @@ io.on('connection', function(socket){
       rooms[roomname].users.push(username);
       socket.username = username;
       socket.room = roomname;
+      socket.join(roomname);
       socket.emit('joinRoom', 'You joined ' + roomname);
       socket.broadcast.to(roomname).emit('newUser', username + ' just joined ' + roomname);
     } else {
@@ -31,6 +32,7 @@ io.on('connection', function(socket){
       };
       socket.username = username;
       socket.room = roomname;
+      socket.join(roomname);
       console.log(roomname + ' created');
       socket.emit('joinRoom', 'You joined ' + roomname);
       socket.broadcast.to(roomname).emit('newUser', username + ' just joined ' + roomname);
