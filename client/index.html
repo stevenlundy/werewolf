@@ -5,10 +5,34 @@
   <title>Werewolf</title>
 </head>
 <body>
-  
+  <label>Roomname:<input type="text" id="roomname"></label>
+  <label>Username:<input type="text" id="username"></label>
+  <button onClick="addRoom()">Add Room</button>
+  <button onClick="joinRoom()">Join Room</button>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
+  var joinRoom = function() {
+    var roomname = document.getElementById('roomname').value;
+    var username = document.getElementById('username').value;
+    socket.emit('joinRoom', roomname, username);
+  };
+  var addRoom = function() {
+    var roomname = document.getElementById('roomname').value;
+    var username = document.getElementById('username').value;
+    socket.emit('addRoom', roomname, username);
+  };
+
+  socket.on('message', function(err) {
+    console.log(err);
+  });
+  socket.on('joinRoom', function(msg) {
+    console.log(msg);
+  });
+  socket.on('newUser', function(msg) {
+    console.log(msg);
+  });
+
 </script>
 </html>
