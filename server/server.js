@@ -2,30 +2,19 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var helpers = require('./helpers');
 
-var port = process.env.PORT || 8011;
+var port = process.env.PORT || 8000;
 
 app.use('/', express.static(__dirname + '/../client'));
 
 var rooms = {};
 
-var generateRoomCode = function () {
-  return [0,0,0,0].map(getRandomLetter).join('');
-}
-
-var getRandomLetter = function () {
-  return String.fromCharCode('A'.charCodeAt(0) + getRandomBetween(0, 26));
-}
-
-var getRandomBetween = function (min, max) {
-  // (integer min, integer max) -> integer
-  return Math.floor(Math.random()*(max - min)) + min;
-}
-
 io.on('connection', function (socket) {
   console.log('a user connected');
-  socket.on('joinRoom', function(roomcode, username) {
-    roomcode = roomcode.toUpperCase();
+  socket.on('joinRoom', function(data) {
+    username = data.username;
+    roomcode = data.roomcode.toUpperCase();
     if(roomcode in rooms) {
       rooms[roomcode].users.push(username);
       socket.username = username;
@@ -39,7 +28,7 @@ io.on('connection', function (socket) {
   });
   socket.on('createRoom', function() {
     do {
-      var roomcode = generateRoomCode();
+      var roomcode = helpers.generateRoomCode();
     } while (roomcode in rooms);
     rooms[roomcode] = {
       users: []

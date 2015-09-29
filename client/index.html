@@ -2,47 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <base href="/">
   <title>Werewolf</title>
+  <script src="/libs/angular/angular.js"></script>
+  <script src="/libs/angular-route/angular-route.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app/services.js"></script>
+  <script src="/app/init/init.js"></script>
+  <script src="/app/play/play.js"></script>
+  <script src="/app/host/host.js"></script>
 </head>
-<body>
-  <div>
-    <h2>Host Game</h2>
-    <p>Create a new game. This device will act as the moderator for the game by delivering instructions for the other players. Make sure the volume is up and the display is where everyone can see it.</p>
-    <button onClick="createGame()">Create Game</button>
-  </div>
-  <div>
-    <h2>Join a Game</h2>
-    <label>Room code <input type="text" id="roomname"></label>
-    <label>Name <input type="text" id="username"></label>
-    <button onClick="joinRoom()">Play</button>
-  </div>
+<body ng-app="werewolf">
+  <div ng-view></div>
 </body>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io();
-  var joinRoom = function() {
-    var roomname = document.getElementById('roomname').value;
-    var username = document.getElementById('username').value;
-    socket.emit('joinRoom', roomname, username);
-  };
-  var createGame = function() {
-    socket.emit('createRoom');
-  };
-
-  socket.on('message', function (err) {
-    console.log(err);
-  });
-  socket.on('joinRoom', function (msg) {
-    console.log(msg);
-    console.dir(socket);
-  });
-  socket.on('newUser', function (msg) {
-    console.log(msg);
-  });
-  socket.on('hostGame', function (roomcode) {
-    console.log('Waiting for players to join ' + roomcode);
-    console.dir(socket);
-  });
-
-</script>
+  <script src="/app/app.js"></script>
 </html>

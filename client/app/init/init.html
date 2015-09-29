@@ -1,0 +1,11 @@
+<div>
+  <h2>Host Game</h2>
+  <p>Create a new game. This device will act as the moderator for the game by delivering instructions for the other players. Make sure the volume is up and the display is where everyone can see it.</p>
+  <button ng-click="start.createGame()">Create Game</button>
+</div>
+<div>
+  <h2>Join a Game</h2>
+  <label>Room code <input type="text" ng-model="start.roomcode"></label>
+  <label>Name <input type="text" ng-model="start.username"></label>
+  <button ng-click="start.joinRoom()">Play</button>
+</div>
