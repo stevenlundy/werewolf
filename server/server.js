@@ -13,15 +13,15 @@ var rooms = {};
 io.on('connection', function (socket) {
   console.log('a user connected');
   socket.on('joinRoom', function(data) {
-    username = data.username;
-    roomcode = data.roomcode.toUpperCase();
+    var name = data.name;
+    var roomcode = data.roomcode.toUpperCase();
     if(roomcode in rooms) {
-      rooms[roomcode].users.push(username);
-      socket.username = username;
+      rooms[roomcode].players.push(name);
+      socket.name = name;
       socket.room = roomcode;
       socket.join(roomcode);
-      socket.emit('joinRoom', 'You joined ' + roomcode);
-      socket.broadcast.to(roomcode).emit('newUser', username + ' just joined ' + roomcode);
+      socket.emit('joinRoom', roomcode);
+      socket.broadcast.to(roomcode).emit('newPlayer', name);
     } else {
       socket.emit('message', roomcode + ' does not exist');
     }
@@ -31,7 +31,7 @@ io.on('connection', function (socket) {
       var roomcode = helpers.generateRoomCode();
     } while (roomcode in rooms);
     rooms[roomcode] = {
-      users: []
+      players: []
     };
     socket.room = roomcode;
     socket.join(roomcode);

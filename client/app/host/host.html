@@ -1,0 +1,9 @@
+<div>
+  <h2>Room code: {{ host.roomcode }}</h2>
+  <p>Waiting for players</p>
+  <h2>Players</h2>
+  <ul>
+    <li ng-repeat="player in host.players">{{ player }}</li>
+  </ul>
+  <button ng-click="host.startGame()" ng-disabled="host.players.length < 7">Start Game</button>
+</div>

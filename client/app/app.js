@@ -7,12 +7,12 @@ angular.module('werewolf', [
   ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider
-    .when('/host', {
+    .when('/host/:roomcode', {
       templateUrl: 'app/host/host.html',
       controller: 'HostController',
       controllerAs: 'host'
     })
-    .when('/play', {
+    .when('/play/:roomcode', {
       templateUrl: 'app/play/play.html',
       controller: 'PlayController',
       controllerAs: 'play'
@@ -21,7 +21,7 @@ angular.module('werewolf', [
       templateUrl: 'app/init/init.html',
       controller: 'StartController',
       controllerAs: 'start'
-    })
+    });
 
-    $locationProvider.html5Mode(true)
-  })
+    $locationProvider.html5Mode(true);
+  });

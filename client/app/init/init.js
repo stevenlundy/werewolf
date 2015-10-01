@@ -1,5 +1,5 @@
 angular.module('werewolf.start', [])
-  .controller('StartController', function (socket){
+  .controller('StartController', function (socket, $location){
 
     this.joinRoom = function() {
       socket.emit('joinRoom', {
@@ -14,15 +14,13 @@ angular.module('werewolf.start', [])
     socket.on('message', function (err) {
       console.log(err);
     });
-    socket.on('joinRoom', function (msg) {
-      console.log(msg);
-      console.dir(socket);
-    });
-    socket.on('newUser', function (msg) {
-      console.log(msg);
+    socket.on('joinRoom', function (roomcode) {
+      console.log(roomcode);
+      //console.dir(socket);
     });
     socket.on('hostGame', function (roomcode) {
+      $location.path('/host/'+roomcode);
       console.log('Waiting for players to join ' + roomcode);
-      console.dir(socket);
+      //console.dir(socket);
     });
   });
