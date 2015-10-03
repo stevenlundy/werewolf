@@ -21,6 +21,7 @@ io.on('connection', function (socket) {
       socket.room = roomcode;
       socket.join(roomcode);
       socket.emit('joinRoom', roomcode);
+      console.log(name);
       socket.broadcast.to(roomcode).emit('newPlayer', name);
     } else {
       socket.emit('message', roomcode + ' does not exist');

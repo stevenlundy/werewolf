@@ -4,7 +4,7 @@ angular.module('werewolf.start', [])
     this.joinRoom = function() {
       socket.emit('joinRoom', {
         roomcode: this.roomcode,
-        username: this.username
+        name: this.name
       });
     };
     this.createGame = function() {
