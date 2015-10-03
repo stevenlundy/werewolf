@@ -4,7 +4,6 @@ angular.module('werewolf.host', [])
     this.players = [];
 
     socket.on('newPlayer', function(player) {
-      console.log(player);
       this.players.push(player);
     }.bind(this));
   });

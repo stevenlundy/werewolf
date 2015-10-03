@@ -13,16 +13,19 @@ var rooms = {};
 io.on('connection', function (socket) {
   console.log('a user connected');
   socket.on('joinRoom', function(data) {
-    var name = data.name;
+    var name = data.name.toUpperCase();
     var roomcode = data.roomcode.toUpperCase();
     if(roomcode in rooms) {
-      rooms[roomcode].players.push(name);
-      socket.name = name;
-      socket.room = roomcode;
-      socket.join(roomcode);
-      socket.emit('joinRoom', roomcode);
-      console.log(name);
-      socket.broadcast.to(roomcode).emit('newPlayer', name);
+      if(name in rooms[roomcode].players) {
+        socket.emit('message', 'Name ' + name + ' is already taken.');
+      } else {
+        rooms[roomcode].players[name] = socket;
+        socket.name = name;
+        socket.room = roomcode;
+        socket.join(roomcode);
+        socket.emit('joinRoom', roomcode);
+        socket.broadcast.to(roomcode).emit('newPlayer', name);
+      }
     } else {
       socket.emit('message', roomcode + ' does not exist');
     }
@@ -32,7 +35,7 @@ io.on('connection', function (socket) {
       var roomcode = helpers.generateRoomCode();
     } while (roomcode in rooms);
     rooms[roomcode] = {
-      players: []
+      players: {}
     };
     socket.room = roomcode;
     socket.join(roomcode);

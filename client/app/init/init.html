@@ -5,7 +5,7 @@
 </div>
 <div>
   <h2>Join a Game</h2>
-  <label>Room code <input type="text" ng-model="start.roomcode"></label>
-  <label>Name <input type="text" ng-model="start.name"></label>
+  <label>Room code <input type="text" maxlength="4" ng-model="start.roomcode"></label>
+  <label>Name <input type="text" maxlength="12" ng-model="start.name"></label>
   <button ng-click="start.joinRoom()">Play</button>
 </div>
