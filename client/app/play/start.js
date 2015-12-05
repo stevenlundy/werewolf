@@ -1,5 +1,5 @@
 angular.module('werewolf.start', [])
-  .controller('StartCtrl', function (socket){
+  .controller('StartController', function (socket){
 
     this.joinRoom = function() {
       socket.emit('joinRoom', {

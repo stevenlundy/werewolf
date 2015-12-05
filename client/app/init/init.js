@@ -15,6 +15,7 @@ angular.module('werewolf.start', [])
       console.log(err);
     });
     socket.on('joinRoom', function (roomcode) {
+      $location.path('/play/'+roomcode);
       console.log(roomcode);
       //console.dir(socket);
     });

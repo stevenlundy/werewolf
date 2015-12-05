@@ -3,7 +3,12 @@ angular.module('werewolf.host', [])
     this.roomcode = $routeParams.roomcode;
     this.players = [];
 
+    this.startGame = function() {
+      socket.emit('startGame');
+    };
+
     socket.on('newPlayer', function(player) {
       this.players.push(player);
     }.bind(this));
+
   });
